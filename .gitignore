@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.log
+
+# Capacitor / iOS
+ios/App/Pods/
+ios/App/App/public/
+ios/App/output/
+ios/DerivedData/
+.DS_Store

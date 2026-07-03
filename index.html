@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#E4E7EC" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Polymerge</title>
+</head>
+<body>
+  <div class="app">
+    <p class="eyebrow">merge puzzle &middot; 3&rarr;10</p>
+    <div class="title-row">
+      <h1>Polymerge</h1>
+      <button class="btn icon" id="haptics" aria-label="Toggle haptics" aria-pressed="true">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+          <rect x="6.5" y="2.5" width="7" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path class="wave" d="M3.2 6.5v7M16.8 6.5v7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <p class="sub">Merge two matching shapes &mdash; every merge adds a side. Reach the decagon.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="k">Score</div><div class="v" id="score">0</div></div>
+      <div class="stat"><div class="k">Best</div><div class="v" id="best">0</div></div>
+      <div class="stat"><div class="k">Top</div><div class="v" id="top">Triangle</div></div>
+    </div>
+
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
+      <div class="over" id="over">
+        <div class="card">
+          <div class="big" id="over-big"></div>
+          <div class="small" id="over-small"></div>
+        </div>
+        <div class="btns" id="over-btns"></div>
+      </div>
+    </div>
+
+    <div class="ladder" id="ladder"></div>
+
+    <div class="controls">
+      <button class="btn primary" id="new">New game</button>
+    </div>
+
+    <p class="foot">swipe &middot; arrows / wasd &middot; goal: decagon</p>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
