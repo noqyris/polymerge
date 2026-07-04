@@ -10,18 +10,17 @@ import { PolymergeGame } from './game/game'
 import { GameScene } from './render/GameScene'
 import { shapeName } from './render/palette'
 import {
-  gameOverTap,
-  hapticsEnabled,
-  mergeTap,
-  setHapticsEnabled,
-  winTap,
-} from './services/haptics'
-import {
-  loadBest,
-  loadHapticsEnabled,
-  saveBest,
-  saveHapticsEnabled,
-} from './services/storage'
+  audioEnabled,
+  playGameOver,
+  playMerge,
+  playSpawn,
+  playWin,
+  renderSample,
+  setAudioEnabled,
+  unlockAudio,
+} from './services/audio'
+import { gameOverTap, mergeTap, setHapticsEnabled, winTap } from './services/haptics'
+import { loadBest, loadSoundEnabled, saveBest, saveSoundEnabled } from './services/storage'
 import { Hud } from './ui/hud'
 import { Ladder } from './ui/ladder'
 import { Overlay } from './ui/overlay'
@@ -30,8 +29,17 @@ async function boot() {
   // Canvas numerals use the bundled fonts — wait so first paint is correct.
   await document.fonts.ready.catch(() => {})
 
-  const [best0, hapticsOn] = await Promise.all([loadBest(), loadHapticsEnabled()])
-  setHapticsEnabled(hapticsOn)
+  // One toggle mutes both sound and haptics.
+  const [best0, soundOn] = await Promise.all([loadBest(), loadSoundEnabled()])
+  setAudioEnabled(soundOn)
+  setHapticsEnabled(soundOn)
+
+  // iOS/Chrome autoplay policy: the AudioContext can only start from a user
+  // gesture, so arm it on the first interaction of any kind.
+  const unlock = () => unlockAudio()
+  window.addEventListener('pointerdown', unlock, { once: true })
+  window.addEventListener('keydown', unlock, { once: true })
+  window.addEventListener('touchstart', unlock, { once: true, passive: true })
 
   // Keep goal-dependent copy in sync with WIN_SIDES.
   const goal = shapeName(WIN_SIDES).toLowerCase()
@@ -65,11 +73,19 @@ async function boot() {
   }
 
   const scene = new GameScene(logic, {
-    onMergePop: () => mergeTap(),
+    onMergePop: (turn) => {
+      mergeTap()
+      // One note per merge, pitched to the resulting polygon (rises with sides).
+      playMerge(turn.merges.map((m) => m.tile.sides))
+    },
     onTurn: (turn) => {
       syncHud()
+      // A quiet spawn tick only when nothing merged, so every move has exactly
+      // one clear sound (merges already spoke in onMergePop).
+      if (turn.merges.length === 0 && turn.spawned) playSpawn()
       if (turn.justWon) {
         winTap()
+        playWin()
         scene.setInputEnabled(false)
         overlay.show('win', logic.score, {
           onKeepGoing: () => {
@@ -80,6 +96,7 @@ async function boot() {
         })
       } else if (turn.over) {
         gameOverTap()
+        playGameOver()
         overlay.show('lose', logic.score, { onNewGame: newGame })
       }
     },
@@ -107,21 +124,31 @@ async function boot() {
 
   document.getElementById('new')!.addEventListener('click', newGame)
 
-  const hapticsBtn = document.getElementById('haptics')!
-  hapticsBtn.setAttribute('aria-pressed', String(hapticsEnabled()))
-  hapticsBtn.addEventListener('click', () => {
-    const on = !hapticsEnabled()
+  const soundBtn = document.getElementById('sound')!
+  soundBtn.setAttribute('aria-pressed', String(audioEnabled()))
+  soundBtn.addEventListener('click', () => {
+    const on = !audioEnabled()
+    setAudioEnabled(on)
     setHapticsEnabled(on)
-    hapticsBtn.setAttribute('aria-pressed', String(on))
-    void saveHapticsEnabled(on)
-    if (on) mergeTap() // confirm with the same tap merges use
+    soundBtn.setAttribute('aria-pressed', String(on))
+    void saveSoundEnabled(on)
+    if (on) {
+      unlockAudio()
+      mergeTap()
+      playMerge([4]) // confirm with a single tap tone
+    }
   })
 
   syncHud()
 
   if (import.meta.env.DEV) {
     // Hook for automated in-browser smoke tests.
-    ;(window as unknown as Record<string, unknown>).__polymerge = { logic, scene }
+    ;(window as unknown as Record<string, unknown>).__polymerge = {
+      logic,
+      scene,
+      ladder,
+      audio: { renderSample, setAudioEnabled, unlockAudio },
+    }
   }
 }
 

@@ -58,7 +58,10 @@ h1{font-family:var(--disp); font-weight:700; font-size:34px; letter-spacing:-.01
 .over .card .small{color:var(--muted); font-size:13px; margin-top:4px}
 .over .btns{display:flex; gap:10px}
 
-.ladder{display:flex; gap:6px; margin:16px 0 4px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; justify-content:center}
+/* Vertical padding gives the current-shape ring room inside the clip box:
+   overflow-x forces overflow-y to clip too, so the ring's negative inset would
+   otherwise be cut off. */
+.ladder{display:flex; gap:6px; margin:12px 0 4px; padding:6px 8px 4px; overflow-x:auto; scrollbar-width:none; justify-content:center}
 .ladder::-webkit-scrollbar{display:none}
 .rung{flex:0 0 auto; width:38px; text-align:center}
 .rung svg{display:block; width:34px; height:34px; margin:0 auto}
@@ -79,6 +82,8 @@ h1{font-family:var(--disp); font-weight:700; font-size:34px; letter-spacing:-.01
 .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 .btn.icon{height:38px; min-width:38px; padding:0 10px; color:var(--muted)}
 .btn.icon[aria-pressed="true"]{color:var(--ink)}
-.btn.icon[aria-pressed="false"] .wave{opacity:.25}
+.btn.icon .slash{display:none}
+.btn.icon[aria-pressed="false"] .wave{opacity:0}
+.btn.icon[aria-pressed="false"] .slash{display:block}
 
 .foot{font-family:var(--mono); font-size:11px; color:var(--muted); text-align:center; margin-top:16px; letter-spacing:.03em}

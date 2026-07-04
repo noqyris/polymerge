@@ -2,7 +2,8 @@ import { Preferences } from '@capacitor/preferences'
 
 // Capacitor Preferences: native storage on iOS/Android, localStorage on web.
 const BEST_KEY = 'polymerge.best'
-const HAPTICS_KEY = 'polymerge.haptics'
+// One "mute" preference gates both sound and haptics.
+const SOUND_KEY = 'polymerge.sound'
 
 export async function loadBest(): Promise<number> {
   try {
@@ -21,18 +22,18 @@ export async function saveBest(best: number): Promise<void> {
   }
 }
 
-export async function loadHapticsEnabled(): Promise<boolean> {
+export async function loadSoundEnabled(): Promise<boolean> {
   try {
-    const { value } = await Preferences.get({ key: HAPTICS_KEY })
+    const { value } = await Preferences.get({ key: SOUND_KEY })
     return value !== 'off'
   } catch {
     return true
   }
 }
 
-export async function saveHapticsEnabled(on: boolean): Promise<void> {
+export async function saveSoundEnabled(on: boolean): Promise<void> {
   try {
-    await Preferences.set({ key: HAPTICS_KEY, value: on ? 'on' : 'off' })
+    await Preferences.set({ key: SOUND_KEY, value: on ? 'on' : 'off' })
   } catch {
     // non-fatal
   }
