@@ -9,3 +9,12 @@ ios/App/output/
 ios/DerivedData/
 ios/DerivedRelease/
 .DS_Store
+
+# fastlane: secrets & build artifacts (never commit the API key)
+ios/App/fastlane/.env
+**/*.p8
+ios/App/fastlane/report.xml
+ios/App/fastlane/README.md
+ios/App/build/
+ios/App/*.ipa
+ios/App/*.app.dSYM.zip

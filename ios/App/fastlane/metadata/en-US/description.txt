@@ -1,0 +1,18 @@
+Polymerge is a calm, minimal merge puzzle with one simple twist: every tile is a regular polygon, and its value is its number of sides.
+
+Slide the board and two matching shapes merge into the next polygon — two triangles make a square, two squares make a pentagon, and on it goes. There's no finish line. The whole point is one question: how big a polygon can you build?
+
+Beautifully simple, quietly deep. A clean "drafting-table" look, satisfying slides and merges, and a soft, musical sound for every combine. Play a quick round in a queue or chase your all-time best for hours.
+
+FEATURES
+• Endless play — no artificial win screen, just your next-biggest polygon
+• One-more-side merging: triangle → square → pentagon → … → and beyond
+• A growing progress ladder that always shows the next shape to chase
+• Your best score and biggest-ever polygon are saved on your device
+• Gentle, synthesized sound and light haptics — with a one-tap mute
+• Crisp, hand-drawn geometry that scales across every iPhone
+• Fully offline. No ads. No accounts. No tracking. No data collected.
+
+Easy to learn in seconds, hard to put down. If you like 2048, merge puzzles, number games, or just something relaxing and elegant to fidget with, Polymerge is for you.
+
+Swipe. Merge. Go bigger.

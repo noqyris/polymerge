@@ -4,6 +4,11 @@ Everything in the app is submission-ready. What's left needs **your** Apple
 Developer account and can only be done by you (Apple requires signing in with
 your Apple ID and clicking Submit). This is the exact path.
 
+> **Prefer to automate it?** See **[AUTOMATION.md](AUTOMATION.md)** — a fastlane
+> setup (already wired with all metadata + screenshots) that uploads and submits
+> with a single command once you provide an App Store Connect API key. The steps
+> below are the equivalent manual path.
+
 ## What's already done for you
 
 - ✅ Bundle id `com.noqyris.polymerge`, display name **Polymerge**, portrait-locked.
