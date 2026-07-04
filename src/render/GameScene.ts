@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import { GRID_SIZE } from '../game/constants'
 import type { PolymergeGame } from '../game/game'
 import type { Direction, Tile, TileMove, TurnResult } from '../game/types'
-import { hexToNumber, SLOT_COLOR } from './palette'
+import { hexToNumber, shapeColors, SLOT_COLOR } from './palette'
 import { TileView } from './TileView'
 
 // Board geometry, as fractions of the (square) canvas — matches the prototype.
@@ -108,6 +108,8 @@ export class GameScene extends Phaser.Scene {
         this.views.delete(id)
       }
       settles.push(this.popIn(this.addTileView(merge.tile)))
+      // Score gained per merge is the new tile's side count.
+      this.floatScore(merge.tile.row, merge.tile.col, merge.tile.sides)
     }
     if (turn.merges.length) this.hooks.onMergePop(turn)
     if (turn.spawned) settles.push(this.spawnIn(this.addTileView(turn.spawned), SPAWN_DELAY_MS))
@@ -154,6 +156,36 @@ export class GameScene extends Phaser.Scene {
         g.fillRoundedRect(x - cell / 2, y - cell / 2, cell, cell, cell * 0.09)
       }
     }
+  }
+
+  /** A small "+N" annotation that drifts up from a merge and fades out. */
+  private floatScore(row: number, col: number, amount: number) {
+    const { x, y } = this.cellCenter(row, col)
+    const [, inkHex] = shapeColors(amount)
+    const label = this.add
+      .text(x, y - this.cellSize * 0.12, `+${amount}`, {
+        fontFamily: "'Space Mono', ui-monospace, monospace",
+        fontStyle: 'bold',
+        fontSize: `${Math.round(this.cellSize * 0.2)}px`,
+        color: inkHex,
+      })
+      .setOrigin(0.5)
+      .setDepth(10)
+
+    if (this.reduceMotion) {
+      this.tweens.add({ targets: label, alpha: 0, duration: 260, delay: 200, onComplete: () => label.destroy() })
+      return
+    }
+    label.setScale(0.7)
+    this.tweens.add({
+      targets: label,
+      y: y - this.cellSize * 0.62,
+      scale: 1,
+      alpha: { from: 1, to: 0 },
+      duration: 560,
+      ease: 'Quad.easeOut',
+      onComplete: () => label.destroy(),
+    })
   }
 
   private addTileView(tile: Tile): TileView {
