@@ -73,3 +73,25 @@ approval.
 3. I report back the upload result and the review submission status.
 
 Nothing is sent to Apple until you say go — this is all staged and waiting.
+
+## Current status (what's provided / still blocking)
+
+Provided so far → written into `fastlane/.env`:
+
+- **Key ID** `NXM3G4TLX3`
+- **Issuer ID** `fb67d5b5-b55b-4fb1-b5c3-acf16cbccdda`
+
+Still needed before I can run anything against Apple:
+
+1. **The matching private key file.** `.env` expects
+   `ios/App/fastlane/AuthKey_NXM3G4TLX3.p8`. Only `AuthKey_87V9QK9CTV.p8` was
+   found on disk (in Downloads) — a **different** key id. Put the
+   `AuthKey_NXM3G4TLX3.p8` here, **or** tell me `87V9QK9CTV` is the right one and
+   I'll switch `ASC_KEY_ID`/`ASC_KEY_PATH`.
+2. **Active Apple Developer membership** and a **Team** selected in Xcode
+   (automatic signing) — needed to build & sign.
+3. The **three real values**: support URL, privacy URL, review phone.
+4. The two one-time ASC toggles: **Age Rating** and **App Privacy**.
+
+Until 1–2 exist, `fastlane` cannot authenticate or sign, so I can't push. The
+moment they're in place, the run is a single command.

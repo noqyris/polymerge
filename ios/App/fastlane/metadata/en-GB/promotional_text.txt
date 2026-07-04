@@ -1,0 +1,1 @@
+Merge two matching shapes and they become the next polygon — triangle, square, pentagon… How big a polygon can you build? Calm, minimal, and fully offline.

@@ -94,6 +94,16 @@ Answer **"No, we do not collect data from this app."** → the label shows
 **Data Not Collected**. This matches [PRIVACY.md](PRIVACY.md) and the bundled
 `PrivacyInfo.xcprivacy`.
 
+## Screenshots & app icon (in `appstore/`)
+
+- **iPhone 6.9"** (1320×2868): `01-merge`…`05-record` — five captioned shots.
+- **iPad 13"** (2048×2732): `ipad-1-merge`…`ipad-4-adds-a-side` — the app is
+  universal (iPhone + iPad), so an iPad set is required and included.
+- **App icon** (`app-icon-1024.png`): bold white hexagon on an indigo gradient —
+  opaque 1024, already in the asset catalog. Chosen to pop in search results.
+
+fastlane uploads all of these automatically (see [AUTOMATION.md](AUTOMATION.md)).
+
 ## Required URLs
 
 - **Privacy Policy URL** (required): host [PRIVACY.md](PRIVACY.md) somewhere
@@ -109,8 +119,10 @@ Answer **"No, we do not collect data from this app."** → the label shows
 - **SKU:** `polymerge-ios-001` (any unique string; internal only)
 - **Price:** Free (suggested)
 - **Copyright:** `2026 Djordje Subotic`
-- **Primary language:** English (U.S.). Optional: add a Serbian (Srpski)
-  localization later — the UI is currently English.
+- **Primary language:** English (U.S.). A second **English (U.K.)** localization
+  is included with a *different* keyword set — a safe way to index ~2× more
+  search terms for English stores (Apple doesn't support Serbian metadata; U.K.
+  English reaches the same audience with extra keywords).
 
 ## ASO notes (how people find it)
 

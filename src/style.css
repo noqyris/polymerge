@@ -25,6 +25,14 @@ body{
 }
 .app{width:100%; max-width:452px}
 
+/* Tablets: a larger board, vertically centred so it doesn't cling to the top. */
+@media (min-width:700px){
+  body{align-items:center}
+  .app{max-width:600px}
+  h1{font-size:40px}
+  .sub{font-size:15px; max-width:44ch}
+}
+
 .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:var(--muted); text-transform:uppercase; margin:0 0 6px}
 .title-row{display:flex; align-items:flex-end; justify-content:space-between; gap:12px}
 h1{font-family:var(--disp); font-weight:700; font-size:34px; letter-spacing:-.01em; margin:0; line-height:1}
