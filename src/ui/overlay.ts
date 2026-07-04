@@ -1,40 +1,36 @@
-import { WIN_SIDES } from '../game/constants'
 import { shapeName } from '../render/palette'
 
-export interface OverlayHandlers {
-  onKeepGoing?: () => void
-  onNewGame: () => void
+export interface GameOverData {
+  biggestSides: number
+  score: number
+  recordSides: number
+  isRecord: boolean
 }
 
+/** The end-of-run screen. The game is endless, so it celebrates how far you got. */
 export class Overlay {
   private root = document.getElementById('over')!
   private big = document.getElementById('over-big')!
   private small = document.getElementById('over-small')!
   private btns = document.getElementById('over-btns')!
 
-  show(kind: 'win' | 'lose', score: number, handlers: OverlayHandlers) {
+  show(data: GameOverData, onNewGame: () => void) {
+    this.big.textContent = shapeName(data.biggestSides)
+    this.small.textContent = data.isRecord
+      ? `Your biggest yet · score ${data.score} · new record!`
+      : `Biggest this run · score ${data.score} · best ${shapeName(data.recordSides)}`
+
     this.btns.innerHTML = ''
-    if (kind === 'win') {
-      this.big.textContent = `${shapeName(WIN_SIDES)}!`
-      this.small.textContent = 'You reached the goal — keep going if you can.'
-      if (handlers.onKeepGoing) this.addButton('Keep going', false, handlers.onKeepGoing)
-    } else {
-      this.big.textContent = 'Game over'
-      this.small.textContent = `Score ${score} · no moves left.`
-    }
-    this.addButton('New game', true, handlers.onNewGame)
+    const b = document.createElement('button')
+    b.className = 'btn primary'
+    b.textContent = 'New game'
+    b.addEventListener('click', onNewGame)
+    this.btns.appendChild(b)
+
     this.root.classList.add('show')
   }
 
   hide() {
     this.root.classList.remove('show')
-  }
-
-  private addButton(label: string, primary: boolean, onClick: () => void) {
-    const b = document.createElement('button')
-    b.className = primary ? 'btn primary' : 'btn'
-    b.textContent = label
-    b.addEventListener('click', onClick)
-    this.btns.appendChild(b)
   }
 }

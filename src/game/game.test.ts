@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { GRID_SIZE, START_TILES, WIN_SIDES } from './constants'
+import { GRID_SIZE, START_TILES } from './constants'
 import { PolymergeGame } from './game'
 import type { Rng } from './types'
 
@@ -53,25 +53,25 @@ describe('PolymergeGame', () => {
     expect(turn.scoreGained).toBe(4)
     expect(game.score).toBe(4)
     expect(turn.spawned).not.toBeNull()
+    expect(turn.maxSides).toBe(4)
     expect(game.tiles).toHaveLength(2) // merged tile + spawn
   })
 
-  it('sets justWon exactly on the turn the first WIN_SIDES tile appears', () => {
+  it('is endless — merging past a decagon just keeps growing, no win flag', () => {
     const game = new PolymergeGame(seq(0.0, 0.5))
     game.reset()
+    // Two decagons (10) merge into an 11-gon — well past the old win target.
     game.grid = gridOf([
-      [WIN_SIDES - 1, 0, 0, WIN_SIDES - 1],
+      [10, 0, 0, 10],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ])
-    const winTurn = game.move('left')!
-    expect(winTurn.justWon).toBe(true)
-    expect(game.won).toBe(true)
-
-    const later = game.move('right')!
-    expect(later.justWon).toBe(false)
-    expect(game.won).toBe(true)
+    const turn = game.move('left')!
+    expect(turn.maxSides).toBe(11)
+    expect(game.maxSides).toBe(11)
+    expect(turn.over).toBe(false)
+    expect('justWon' in turn).toBe(false)
   })
 
   it('ends the game when the post-spawn board has no move left', () => {

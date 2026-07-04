@@ -5,7 +5,6 @@ import '@fontsource/space-grotesk/700.css'
 import '@fontsource/space-mono/400.css'
 import '@fontsource/space-mono/700.css'
 import Phaser from 'phaser'
-import { BASE_SIDES, WIN_SIDES } from './game/constants'
 import { PolymergeGame } from './game/game'
 import { GameScene } from './render/GameScene'
 import { shapeName } from './render/palette'
@@ -20,17 +19,33 @@ import {
   unlockAudio,
 } from './services/audio'
 import { gameOverTap, mergeTap, setHapticsEnabled, winTap } from './services/haptics'
-import { loadBest, loadSoundEnabled, saveBest, saveSoundEnabled } from './services/storage'
+import {
+  loadBest,
+  loadRecordSides,
+  loadSoundEnabled,
+  saveBest,
+  saveRecordSides,
+  saveSoundEnabled,
+} from './services/storage'
 import { Hud } from './ui/hud'
 import { Ladder } from './ui/ladder'
 import { Overlay } from './ui/overlay'
+import { Toast } from './ui/toast'
+
+// Only shapes at least this big are worth a mid-game record celebration —
+// keeps the first few discoveries from spamming the flourish.
+const MILESTONE_MIN_SIDES = 5
 
 async function boot() {
   // Canvas numerals use the bundled fonts — wait so first paint is correct.
   await document.fonts.ready.catch(() => {})
 
   // One toggle mutes both sound and haptics.
-  const [best0, soundOn] = await Promise.all([loadBest(), loadSoundEnabled()])
+  const [best0, record0, soundOn] = await Promise.all([
+    loadBest(),
+    loadRecordSides(),
+    loadSoundEnabled(),
+  ])
   setAudioEnabled(soundOn)
   setHapticsEnabled(soundOn)
 
@@ -41,19 +56,21 @@ async function boot() {
   window.addEventListener('keydown', unlock, { once: true })
   window.addEventListener('touchstart', unlock, { once: true, passive: true })
 
-  // Keep goal-dependent copy in sync with WIN_SIDES.
-  const goal = shapeName(WIN_SIDES).toLowerCase()
-  document.querySelector('.eyebrow')!.textContent = `merge puzzle · ${BASE_SIDES}→${WIN_SIDES}`
+  // Endless: no goal shape — the point is to build the biggest polygon you can.
+  document.querySelector('.eyebrow')!.textContent = 'merge puzzle · endless'
   document.querySelector('.sub')!.textContent =
-    `Merge two matching shapes — every merge adds a side. Reach the ${goal}.`
-  document.querySelector('.foot')!.textContent = `swipe · arrows / wasd · goal: ${goal}`
+    'Merge matching shapes — every merge adds a side. Make the biggest polygon you can.'
+  document.querySelector('.foot')!.textContent = 'swipe · arrows / wasd · go as big as you can'
 
   const logic = new PolymergeGame()
   const hud = new Hud()
   const ladder = new Ladder()
   const overlay = new Overlay()
+  const toast = new Toast()
 
   let best = best0
+  let record = record0 // biggest polygon ever made, across games (live, persisted)
+  let runStartRecord = record0 // record snapshot when the current run began
   const syncHud = () => {
     if (logic.score > best) {
       best = logic.score
@@ -69,6 +86,7 @@ async function boot() {
     overlay.hide()
     scene.setInputEnabled(true)
     scene.newGame()
+    runStartRecord = record
     syncHud()
   }
 
@@ -83,21 +101,28 @@ async function boot() {
       // A quiet spawn tick only when nothing merged, so every move has exactly
       // one clear sound (merges already spoke in onMergePop).
       if (turn.merges.length === 0 && turn.spawned) playSpawn()
-      if (turn.justWon) {
-        winTap()
-        playWin()
-        scene.setInputEnabled(false)
-        overlay.show('win', logic.score, {
-          onKeepGoing: () => {
-            overlay.hide()
-            scene.setInputEnabled(true)
-          },
-          onNewGame: newGame,
-        })
-      } else if (turn.over) {
+
+      // New biggest polygon ever → celebrate without interrupting play.
+      if (turn.maxSides > record) {
+        record = turn.maxSides
+        void saveRecordSides(record)
+        if (record >= MILESTONE_MIN_SIDES) {
+          winTap()
+          playWin()
+          toast.show(`New best — ${shapeName(record)}!`)
+        }
+      }
+
+      if (turn.over) {
+        // A record run is one that beat the all-time best it started under.
+        const isRecord =
+          logic.maxSides > runStartRecord && logic.maxSides >= MILESTONE_MIN_SIDES
         gameOverTap()
         playGameOver()
-        overlay.show('lose', logic.score, { onNewGame: newGame })
+        overlay.show(
+          { biggestSides: logic.maxSides, score: logic.score, recordSides: record, isRecord },
+          newGame,
+        )
       }
     },
   })

@@ -36,10 +36,10 @@ export interface MoveResult {
   scoreGained: number
 }
 
-/** A full turn: the move plus the tile spawned afterwards and end-state flags. */
+/** A full turn: the move plus the tile spawned afterwards and end-state flag. */
 export interface TurnResult extends MoveResult {
   spawned: Tile | null
-  /** True on exactly the turn the first WIN_SIDES tile appears. */
-  justWon: boolean
+  /** The largest polygon on the board after this turn (monotonic within a game). */
+  maxSides: number
   over: boolean
 }

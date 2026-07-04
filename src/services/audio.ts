@@ -16,8 +16,8 @@
 const MASTER_GAIN = 0.22
 
 // C-major pentatonic (A4=440 equal temperament), keyed to resulting side count.
-// Pure pentatonic (no 4th/7th) so overlapping merges never clash. 11/12 are
-// headroom above the default WIN_SIDES=10.
+// Pure pentatonic (no 4th/7th) so overlapping merges never clash. The game is
+// endless, so the scale keeps climbing all the way to the biggest polygon.
 const MERGE_HZ: Record<number, number> = {
   4: 261.63, // C4
   5: 293.66, // D4
@@ -28,10 +28,18 @@ const MERGE_HZ: Record<number, number> = {
   10: 587.33, // D5
   11: 659.25, // E5
   12: 783.99, // G5
+  13: 880.0, // A5
+  14: 1046.5, // C6
+  15: 1174.66, // D6
+  16: 1318.51, // E6
+  17: 1567.98, // G6
+  18: 1760.0, // A6
+  19: 2093.0, // C7
+  20: 2349.32, // D7
 }
 
 function mergeHz(sides: number): number {
-  return MERGE_HZ[Math.max(4, Math.min(12, sides))] ?? MERGE_HZ[4]
+  return MERGE_HZ[Math.max(4, Math.min(20, sides))] ?? MERGE_HZ[4]
 }
 
 let ctx: AudioContext | null = null

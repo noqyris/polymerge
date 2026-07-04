@@ -1,10 +1,9 @@
-import { BASE_SIDES, SPAWN_SQUARE_CHANCE, START_TILES, WIN_SIDES } from './constants'
+import { BASE_SIDES, SPAWN_SQUARE_CHANCE, START_TILES } from './constants'
 import {
   applyMove,
   canMove,
   emptyCells,
   emptyGrid,
-  hasSides,
   maxSides,
   tiles,
   type Grid,
@@ -12,14 +11,14 @@ import {
 import type { Direction, Rng, Tile, TurnResult } from './types'
 
 /**
- * Stateful game controller: owns the grid, score, win/over flags and tile-id
- * counter. Pure logic only — no rendering, no persistence, injectable RNG.
+ * Stateful game controller: owns the grid, score, the game-over flag and the
+ * tile-id counter. The game is endless — there is no win state; it ends only
+ * when no move is possible. Pure logic only — no rendering, no persistence,
+ * injectable RNG.
  */
 export class PolymergeGame {
   grid: Grid = emptyGrid()
   score = 0
-  /** A WIN_SIDES tile has been created at some point this game. */
-  won = false
   over = false
 
   private idCounter = 0
@@ -33,7 +32,6 @@ export class PolymergeGame {
   reset(): Tile[] {
     this.grid = emptyGrid()
     this.score = 0
-    this.won = false
     this.over = false
     const spawned: Tile[] = []
     for (let i = 0; i < START_TILES; i++) {
@@ -56,11 +54,9 @@ export class PolymergeGame {
     this.score += result.scoreGained
     const spawned = this.spawn()
 
-    const justWon = !this.won && hasSides(this.grid, WIN_SIDES)
-    if (justWon) this.won = true
     if (!canMove(this.grid)) this.over = true
 
-    return { ...result, spawned, justWon, over: this.over }
+    return { ...result, spawned, maxSides: this.maxSides, over: this.over }
   }
 
   get tiles(): Tile[] {

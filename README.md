@@ -2,7 +2,8 @@
 
 A 2048-style slide-and-merge puzzle where the tiles are regular polygons: a tile's
 value is its number of sides. Merge two matching shapes and they become the next
-polygon (+1 side). Start from triangles, reach the **decagon**.
+polygon (+1 side). It's **endless** — the point is to build the biggest polygon
+you can.
 
 Built with **Phaser 3 + TypeScript + Vite**, wrapped for iOS with **Capacitor**.
 Portrait only, fully offline, no backend, no external art — every visual is drawn
@@ -15,8 +16,13 @@ in code.
   (▲ + ▲ → ■, ■ + ■ → pentagon, …).
 - After every move that changes the board, one tile spawns: 90% triangle, 10% square.
 - Score += side-count of each newly created shape. Best score persists locally.
-- Creating a decagon wins (you can keep going); no possible move ends the game.
-- The win target is a single constant: `WIN_SIDES` in [src/game/constants.ts](src/game/constants.ts).
+- No win state — the game ends only when no move is possible. Making a new
+  biggest-ever polygon is celebrated with a brief banner; your best shape and
+  score persist locally.
+- The board's max polygon only ever grows, so a compact ladder shows your
+  progress and reveals the next shape to chase. Shapes are defined up to
+  `MAX_SIDES` in [src/game/constants.ts](src/game/constants.ts) (a 4×4 board can
+  realistically reach ~18–19 sides).
 
 ## Development
 

@@ -10,6 +10,15 @@ export const SHAPE_COLORS: Record<number, [string, string]> = {
   10: ['#E9E6FB', '#4A3EA0'],
   11: ['#F0DFF4', '#6B4BB0'],
   12: ['#E3DCF3', '#3B2E86'],
+  // Endless — the palette keeps going around the wheel past the old target.
+  13: ['#D6EFEC', '#12726B'],
+  14: ['#DCEAF7', '#215C99'],
+  15: ['#E9E1F5', '#5E3AA6'],
+  16: ['#F6E0EF', '#93276E'],
+  17: ['#F7DEDE', '#9E2B2B'],
+  18: ['#DEEEDD', '#256B36'],
+  19: ['#F5EBD0', '#8A6A12'],
+  20: ['#E2E6EC', '#2E3A4A'],
 }
 
 const FALLBACK: [string, string] = ['#E3DCF3', '#3B2E86']
@@ -31,6 +40,14 @@ const SHAPE_NAMES: Record<number, string> = {
   10: 'Decagon',
   11: 'Hendecagon',
   12: 'Dodecagon',
+  13: 'Tridecagon',
+  14: 'Tetradecagon',
+  15: 'Pentadecagon',
+  16: 'Hexadecagon',
+  17: 'Heptadecagon',
+  18: 'Octadecagon',
+  19: 'Nonadecagon',
+  20: 'Icosagon',
 }
 
 export function shapeName(sides: number): string {

@@ -1,16 +1,21 @@
-import { BASE_SIDES, WIN_SIDES } from '../game/constants'
+import { BASE_SIDES, LADDER_MIN, MAX_SIDES } from '../game/constants'
 import { polygonPoints, shapeColors } from '../render/palette'
 
 /**
- * Compact progress ladder, triangle → win shape. Reached shapes are filled,
- * the current max wears an accent ring.
+ * Progress ladder for the endless game: it starts at triangle → decagon and
+ * grows as you climb, always revealing one shape beyond your biggest so there
+ * is always a next target to chase. Reached shapes are filled; the current
+ * biggest wears an accent ring.
  */
 export class Ladder {
   private root = document.getElementById('ladder')!
 
   update(maxSides: number) {
+    const top = Math.min(MAX_SIDES, Math.max(LADDER_MIN, maxSides + 1))
     this.root.innerHTML = ''
-    for (let sides = BASE_SIDES; sides <= WIN_SIDES; sides++) {
+    let currentEl: HTMLElement | null = null
+
+    for (let sides = BASE_SIDES; sides <= top; sides++) {
       const [bg, ink] = shapeColors(sides)
       const on = sides <= maxSides
       const cur = sides === maxSides
@@ -27,6 +32,10 @@ export class Ladder {
         `stroke-width="${on ? 6 : 5}" stroke-linejoin="round"/></svg>` +
         `<div class="lab">${sides}</div>`
       this.root.appendChild(rung)
+      if (cur) currentEl = rung
     }
+
+    // As the ladder grows past the viewport, keep the current shape in view.
+    currentEl?.scrollIntoView({ inline: 'center', block: 'nearest' })
   }
 }
