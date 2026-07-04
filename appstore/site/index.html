@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polymerge — Support</title>
+<style>
+  :root{--bg:#E4E7EC;--ink:#191D23;--muted:#5b626c;--accent:#3457D5;--card:#FBFBFC;--line:rgba(25,29,35,.10)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    line-height:1.6;padding:40px 20px}
+  .wrap{max-width:640px;margin:0 auto}
+  .badge{width:96px;height:96px;border-radius:22px;display:block;margin:0 auto 22px}
+  h1{font-size:32px;letter-spacing:-.02em;text-align:center;margin:0 0 6px}
+  .tag{text-align:center;color:var(--muted);margin:0 0 32px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin:16px 0}
+  h2{font-size:18px;margin:0 0 10px}
+  ul{margin:8px 0 0;padding-left:20px}
+  a{color:var(--accent)}
+  .foot{text-align:center;color:var(--muted);font-size:13px;margin-top:28px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <svg class="badge" viewBox="0 0 100 100" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4A3EA0"/><stop offset="1" stop-color="#2E2578"/></linearGradient></defs>
+    <rect width="100" height="100" rx="22" fill="url(#g)"/>
+    <polygon points="50,20 76,35 76,65 50,80 24,65 24,35" fill="#EEF0F8"/>
+    <polygon points="50,34 64,42 64,58 50,66 36,58 36,42" fill="none" stroke="#4A3EA0" stroke-width="2" stroke-linejoin="round" opacity=".5"/>
+  </svg>
+  <h1>Polymerge</h1>
+  <p class="tag">Merge matching shapes — every merge adds a side. Make the biggest polygon you can.</p>
+
+  <div class="card">
+    <h2>How to play</h2>
+    <ul>
+      <li>Swipe (or use the arrow keys) to slide all tiles.</li>
+      <li>Two identical polygons merge into the next one — two triangles make a square, two squares make a pentagon, and so on.</li>
+      <li>It's endless: the goal is simply to build the biggest polygon you can before the board fills up.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Need help or have feedback?</h2>
+    <p>Email <a href="mailto:subotic.djo@gmail.com">subotic.djo@gmail.com</a> and I'll get back to you.</p>
+  </div>
+
+  <div class="card">
+    <h2>Privacy</h2>
+    <p>Polymerge collects no data and works fully offline. Read the full
+      <a href="privacy.html">Privacy Policy</a>.</p>
+  </div>
+
+  <p class="foot">© 2026 Djordje Subotic</p>
+</div>
+</body>
+</html>

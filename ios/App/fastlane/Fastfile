@@ -38,6 +38,42 @@ platform :ios do
     )
   end
 
+  desc "Verify the API key authenticates and list the account's apps"
+  lane :auth_test do
+    require "spaceship"
+    token = Spaceship::ConnectAPI::Token.create(
+      key_id: ENV.fetch("ASC_KEY_ID"),
+      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      filepath: File.absolute_path(ENV.fetch("ASC_KEY_PATH")),
+    )
+    Spaceship::ConnectAPI.token = token
+    apps = Spaceship::ConnectAPI::App.all
+    UI.success("Auth OK — #{apps.count} app(s) visible on this account")
+    apps.each { |a| UI.message("• #{a.name} — #{a.bundle_id}") }
+  end
+
+  desc "Read support/privacy URLs from existing apps to reuse for Polymerge"
+  lane :peek_urls do
+    require "spaceship"
+    Spaceship::ConnectAPI.token = Spaceship::ConnectAPI::Token.create(
+      key_id: ENV.fetch("ASC_KEY_ID"), issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      filepath: ENV.fetch("ASC_KEY_PATH"),
+    )
+    ["com.noqyris.exactly67", "com.noqyris.moonsoon"].each do |bid|
+      app = Spaceship::ConnectAPI::App.find(bid)
+      next UI.message("#{bid}: not found") unless app
+      UI.important(bid)
+      ver = (app.get_live_app_store_version rescue nil) || (app.get_edit_app_store_version rescue nil)
+      (ver&.get_app_store_version_localizations rescue []).each do |l|
+        UI.message("  #{l.locale}: support=#{l.support_url} marketing=#{l.marketing_url}")
+      end
+      info = (app.fetch_live_app_info rescue nil) || (app.fetch_edit_app_info rescue nil)
+      (info&.get_app_info_localizations rescue []).each do |l|
+        UI.message("  #{l.locale}: privacy=#{l.privacy_policy_url}")
+      end
+    end
+  end
+
   desc "Validate listing metadata for common App Review rejection reasons"
   lane :check do
     precheck(api_key: asc_api_key)

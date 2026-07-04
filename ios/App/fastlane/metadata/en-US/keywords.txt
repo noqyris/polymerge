@@ -1,1 +1,1 @@
-2048,puzzle,number,tile,block,geometry,brain,logic,relax,offline,minimal,matching,casual,hexagon,IQ
+grid,puzzle,number,tile,block,geometry,brain,logic,relax,offline,minimal,matching,casual,hexagon,IQ

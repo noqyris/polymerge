@@ -13,6 +13,6 @@ FEATURES
 • Crisp, hand-drawn geometry that scales across every iPhone
 • Fully offline. No ads. No accounts. No tracking. No data collected.
 
-Easy to learn in seconds, hard to put down. If you like 2048, merge puzzles, number games, or just something relaxing and elegant to fidget with, Polymerge is for you.
+Easy to learn in seconds, hard to put down. If you like merge puzzles, number games, or just something relaxing and elegant to fidget with, Polymerge is for you.
 
 Swipe. Merge. Go bigger.
