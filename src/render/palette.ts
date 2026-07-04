@@ -57,3 +57,37 @@ export function polygonPoints(
 export function hexToNumber(hex: string): number {
   return parseInt(hex.slice(1), 16)
 }
+
+interface Rgb {
+  r: number
+  g: number
+  b: number
+}
+
+function hexToRgb(hex: string): Rgb {
+  const n = parseInt(hex.slice(1), 16)
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
+}
+
+function rgbToHex({ r, g, b }: Rgb): string {
+  const h = (v: number) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')
+  return `#${h(r)}${h(g)}${h(b)}`
+}
+
+/** Mix a colour toward white by `amt` (0..1). */
+export function lighten(hex: string, amt: number): string {
+  const { r, g, b } = hexToRgb(hex)
+  return rgbToHex({ r: r + (255 - r) * amt, g: g + (255 - g) * amt, b: b + (255 - b) * amt })
+}
+
+/** Mix a colour toward black by `amt` (0..1). */
+export function darken(hex: string, amt: number): string {
+  const { r, g, b } = hexToRgb(hex)
+  return rgbToHex({ r: r * (1 - amt), g: g * (1 - amt), b: b * (1 - amt) })
+}
+
+/** An `rgba()` string for a hex colour at the given alpha. */
+export function withAlpha(hex: string, alpha: number): string {
+  const { r, g, b } = hexToRgb(hex)
+  return `rgba(${r},${g},${b},${alpha})`
+}

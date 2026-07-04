@@ -149,11 +149,18 @@ export class GameScene extends Phaser.Scene {
   private drawSlots() {
     const g = this.add.graphics()
     const cell = this.cellSize
-    g.fillStyle(hexToNumber(SLOT_COLOR), 1)
+    const radius = cell * 0.09
     for (let row = 0; row < GRID_SIZE; row++) {
       for (let col = 0; col < GRID_SIZE; col++) {
         const { x, y } = this.cellCenter(row, col)
-        g.fillRoundedRect(x - cell / 2, y - cell / 2, cell, cell, cell * 0.09)
+        const left = x - cell / 2
+        const top = y - cell / 2
+        // Empty socket: fill plus a faint darker inner edge so it reads as
+        // recessed beneath the lifted tiles.
+        g.fillStyle(hexToNumber(SLOT_COLOR), 1)
+        g.fillRoundedRect(left, top, cell, cell, radius)
+        g.lineStyle(Math.max(1, cell * 0.012), 0x191d23, 0.05)
+        g.strokeRoundedRect(left + 1, top + 1, cell - 2, cell - 2, radius)
       }
     }
   }
