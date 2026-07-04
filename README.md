@@ -66,3 +66,14 @@ then trust the developer certificate (Settings → General → VPN & Device Mana
 After changing web code, re-run `npm run ios:sync` and press ⌘R again.
 
 Android later: `npx cap add android` — the codebase has no iOS-specific logic.
+
+## Shipping to the App Store
+
+The project is submission-ready (opaque marketing icon, privacy manifest,
+encryption-compliance flag, version 1.0). See:
+
+- **[PUBLISHING.md](PUBLISHING.md)** — exact archive → upload → submit steps.
+- **[APPSTORE.md](APPSTORE.md)** — ready-to-paste name, subtitle, keywords,
+  description, category, and ASO notes.
+- **[appstore/](appstore/)** — five 1320×2868 App Store screenshots.
+- **[PRIVACY.md](PRIVACY.md)** — the privacy policy to host and link.
