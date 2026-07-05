@@ -88,6 +88,22 @@ platform :ios do
     end
   end
 
+  desc "Show the processing state of recent builds"
+  lane :build_status do
+    require "spaceship"
+    Spaceship::ConnectAPI.token = Spaceship::ConnectAPI::Token.create(
+      key_id: ENV.fetch("ASC_KEY_ID"), issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      filepath: ENV.fetch("ASC_KEY_PATH"),
+    )
+    app = Spaceship::ConnectAPI::App.find("com.noqyris.polymerge")
+    builds = app.get_builds(includes: "preReleaseVersion")
+    if builds.empty?
+      UI.important("No builds yet — still processing on Apple's side.")
+    else
+      builds.first(5).each { |b| UI.message("build #{b.version} — #{b.processing_state}") }
+    end
+  end
+
   desc "Read the App Review contact info from an existing app to reuse"
   lane :peek_review do
     require "spaceship"
